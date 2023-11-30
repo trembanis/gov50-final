@@ -17,7 +17,34 @@ output:
 
 ## Results
 
+```{r}
+library(tidyverse)
+library(ggplot2)
+countries <- read.csv("country_profile_variables.csv")
+countries1 <- countries[!(countries$Fertility.rate..total..live.births.per.woman. < 0 | 
+                            countries$GDP.per.capita..current.US.. <0),]
+```
 
+```{r}
+ggplot(data = countries1, mapping = aes(x = GDP.per.capita..current.US.., 
+                                       y = as.numeric(Fertility.rate..total..live.births.per.woman.))) +
+  geom_point() +
+  geom_smooth() +
+  labs(
+    x = "GDP per Capita (in USD)",
+    y = "Fertility Rate (Total Live Births per Woman)",
+    title = "Fertility Rates by GDP for Countries in 2017"
+  )
+```
+
+```{r}
+fit1 <- lm(as.numeric(Fertility.rate..total..live.births.per.woman.) ~ GDP.per.capita..current.US.., data = countries1)
+summary(fit1)
+
+library(modelsummary)
+
+modelsummary(list(fit1), coef_rename = c("Intercept", "GDP per Capita (USD)"))
+```
 
 ## Conclusion
 

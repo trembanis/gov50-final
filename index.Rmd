@@ -1,14 +1,23 @@
 ---
 title: "Gov 50 Final Project"
-author: "Your Name Here"
+author: "Ella Trembanis"
 description: "My final project"
 output:
   distill::distill_article:
     self_contained: false
 ---
 
+## Introduction
 
 
-## Project thoughts
 
-I am interested in exploring data related to...
+## Data
+
+
+
+## Results
+
+
+
+## Conclusion
+

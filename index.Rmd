@@ -22,28 +22,38 @@ library(tidyverse)
 library(ggplot2)
 countries <- read.csv("country_profile_variables.csv")
 countries1 <- countries[!(countries$Fertility.rate..total..live.births.per.woman. < 0 | 
-                            countries$GDP.per.capita..current.US.. <0),]
+                            countries$GDP.per.capita..current.US.. < 0 |
+                            countries$Employment..Agriculture....of.employed. < 0 |
+                            countries$Seats.held.by.women.in.national.parliaments.. < 0),] |>
+  mutate(
+    log_GDP = log(GDP.per.capita..current.US.. + 1)
+  )
+countries1
 ```
 
 ```{r}
-ggplot(data = countries1, mapping = aes(x = GDP.per.capita..current.US.., 
+ggplot(data = countries1, mapping = aes(x = log_GDP, 
                                        y = as.numeric(Fertility.rate..total..live.births.per.woman.))) +
   geom_point() +
   geom_smooth() +
   labs(
-    x = "GDP per Capita (in USD)",
+    x = "GDP per Capita (in log(USD))",
     y = "Fertility Rate (Total Live Births per Woman)",
-    title = "Fertility Rates by GDP for Countries in 2017"
+    title = "Fertility Rates by GDP per Capita for Countries in 2017"
   )
 ```
 
 ```{r}
-fit1 <- lm(as.numeric(Fertility.rate..total..live.births.per.woman.) ~ GDP.per.capita..current.US.., data = countries1)
+fit1 <- lm(as.numeric(Fertility.rate..total..live.births.per.woman.) ~ log_GDP + 
+             as.numeric(Employment..Agriculture....of.employed.) + 
+             Seats.held.by.women.in.national.parliaments.., data = countries1)
 summary(fit1)
 
 library(modelsummary)
 
-modelsummary(list(fit1), coef_rename = c("Intercept", "GDP per Capita (USD)"))
+modelsummary(list(fit1), coef_rename = c("Intercept", "GDP per Capita (in log(USD))",
+                                         "Percentage of labor force employed in agriculture",
+                                         "Seats held by women in national parliaments"))
 ```
 
 ## Conclusion

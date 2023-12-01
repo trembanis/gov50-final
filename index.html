@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["country_profile_variables.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["country_profile_variables.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/kePrint-0.0.1/kePrint.js","index_files/lightable-0.0.1/lightable.css","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1528,54 +1528,78 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
 <span><span class='va'>countries</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.csv</a></span><span class='op'>(</span><span class='st'>"country_profile_variables.csv"</span><span class='op'>)</span></span>
 <span><span class='va'>countries1</span> <span class='op'>&lt;-</span> <span class='va'>countries</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='va'>countries</span><span class='op'>$</span><span class='va'>Fertility.rate..total..live.births.per.woman.</span> <span class='op'>&lt;</span> <span class='fl'>0</span> <span class='op'>|</span> </span>
-<span>                            <span class='va'>countries</span><span class='op'>$</span><span class='va'>GDP.per.capita..current.US..</span> <span class='op'>&lt;</span><span class='fl'>0</span><span class='op'>)</span>,<span class='op'>]</span></span></code></pre>
+<span>                            <span class='va'>countries</span><span class='op'>$</span><span class='va'>GDP.per.capita..current.US..</span> <span class='op'>&lt;</span> <span class='fl'>0</span> <span class='op'>|</span></span>
+<span>                            <span class='va'>countries</span><span class='op'>$</span><span class='va'>Employment..Agriculture....of.employed.</span> <span class='op'>&lt;</span> <span class='fl'>0</span> <span class='op'>|</span></span>
+<span>                            <span class='va'>countries</span><span class='op'>$</span><span class='va'>Seats.held.by.women.in.national.parliaments..</span> <span class='op'>&lt;</span> <span class='fl'>0</span><span class='op'>)</span>,<span class='op'>]</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span></span>
+<span>    log_GDP <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>GDP.per.capita..current.US..</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span></code></pre>
 </div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>countries1</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>GDP.per.capita..current.US..</span>, </span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>countries1</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>log_GDP</span>, </span>
 <span>                                       y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>Fertility.rate..total..live.births.per.woman.</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span></span>
-<span>    x <span class='op'>=</span> <span class='st'>"GDP per Capita (in USD)"</span>,</span>
+<span>    x <span class='op'>=</span> <span class='st'>"GDP per Capita (in log(USD))"</span>,</span>
 <span>    y <span class='op'>=</span> <span class='st'>"Fertility Rate (Total Live Births per Woman)"</span>,</span>
-<span>    title <span class='op'>=</span> <span class='st'>"Fertility Rates by GDP for Countries in 2017"</span></span>
+<span>    title <span class='op'>=</span> <span class='st'>"Fertility Rates by GDP per Capita for Countries in 2017"</span></span>
 <span>  <span class='op'>)</span></span></code></pre>
 </div>
 <p><img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fit1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>Fertility.rate..total..live.births.per.woman.</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>GDP.per.capita..current.US..</span>, data <span class='op'>=</span> <span class='va'>countries1</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fit1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>Fertility.rate..total..live.births.per.woman.</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>log_GDP</span> <span class='op'>+</span> </span>
+<span>             <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>Employment..Agriculture....of.employed.</span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>             <span class='va'>Seats.held.by.women.in.national.parliaments..</span>, data <span class='op'>=</span> <span class='va'>countries1</span><span class='op'>)</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>fit1</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>
 Call:
 lm(formula = as.numeric(Fertility.rate..total..live.births.per.woman.) ~ 
-    GDP.per.capita..current.US.., data = countries1)
+    log_GDP + as.numeric(Employment..Agriculture....of.employed.) + 
+        Seats.held.by.women.in.national.parliaments.., data = countries1)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--1.9200 -0.9502 -0.3023  0.8791  4.1440 
+-2.4442 -0.6166 -0.0770  0.4598  3.5117 
 
 Coefficients:
-                               Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept)                   3.266e+00  1.091e-01  29.953  &lt; 2e-16
-GDP.per.capita..current.US.. -2.916e-05  4.189e-06  -6.961 4.97e-11
-                                
-(Intercept)                  ***
-GDP.per.capita..current.US.. ***
+                                                     Estimate
+(Intercept)                                          6.088949
+log_GDP                                             -0.447665
+as.numeric(Employment..Agriculture....of.employed.)  0.020571
+Seats.held.by.women.in.national.parliaments..        0.002605
+                                                    Std. Error
+(Intercept)                                           1.010362
+log_GDP                                               0.102844
+as.numeric(Employment..Agriculture....of.employed.)   0.006285
+Seats.held.by.women.in.national.parliaments..         0.006210
+                                                    t value Pr(&gt;|t|)
+(Intercept)                                           6.027 9.83e-09
+log_GDP                                              -4.353 2.29e-05
+as.numeric(Employment..Agriculture....of.employed.)   3.273  0.00128
+Seats.held.by.women.in.national.parliaments..         0.419  0.67541
+                                                       
+(Intercept)                                         ***
+log_GDP                                             ***
+as.numeric(Employment..Agriculture....of.employed.) ** 
+Seats.held.by.women.in.national.parliaments..          
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 1.279 on 196 degrees of freedom
-Multiple R-squared:  0.1982,    Adjusted R-squared:  0.1941 
-F-statistic: 48.45 on 1 and 196 DF,  p-value: 4.97e-11</code></pre>
+Residual standard error: 0.9589 on 173 degrees of freedom
+Multiple R-squared:  0.5701,    Adjusted R-squared:  0.5627 
+F-statistic: 76.48 on 3 and 173 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://modelsummary.com'>modelsummary</a></span><span class='op'>)</span></span>
 <span></span>
-<span><span class='fu'><a href='https://rdrr.io/pkg/modelsummary/man/modelsummary.html'>modelsummary</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fit1</span><span class='op'>)</span>, coef_rename <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Intercept"</span>, <span class='st'>"GDP per Capita (USD)"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/modelsummary/man/modelsummary.html'>modelsummary</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fit1</span><span class='op'>)</span>, coef_rename <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Intercept"</span>, <span class='st'>"GDP per Capita (in log(USD))"</span>,</span>
+<span>                                         <span class='st'>"Percentage of labor force employed in agriculture"</span>,</span>
+<span>                                         <span class='st'>"Seats held by women in national parliaments"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -1593,29 +1617,59 @@ F-statistic: 48.45 on 1 and 196 DF,  p-value: 4.97e-11</code></pre>
 Intercept
 </td>
 <td style="text-align:center;">
-3.266
+6.089
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 </td>
 <td style="text-align:center;">
-(0.109)
+(1.010)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-GDP per Capita (USD)
+GDP per Capita (in log(USD))
 </td>
 <td style="text-align:center;">
-0.000
+−0.448
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.103)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Percentage of labor force employed in agriculture
+</td>
+<td style="text-align:center;">
+0.021
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.006)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Seats held by women in national parliaments
+</td>
+<td style="text-align:center;">
+0.003
 </td>
 </tr>
 <tr>
 <td style="text-align:left;box-shadow: 0px 1.5px">
 </td>
 <td style="text-align:center;box-shadow: 0px 1.5px">
-(0.000)
+(0.006)
 </td>
 </tr>
 <tr>
@@ -1623,7 +1677,7 @@ GDP per Capita (USD)
 Num.Obs.
 </td>
 <td style="text-align:center;">
-198
+177
 </td>
 </tr>
 <tr>
@@ -1631,7 +1685,7 @@ Num.Obs.
 R2
 </td>
 <td style="text-align:center;">
-0.198
+0.570
 </td>
 </tr>
 <tr>
@@ -1639,7 +1693,7 @@ R2
 R2 Adj.
 </td>
 <td style="text-align:center;">
-0.194
+0.563
 </td>
 </tr>
 <tr>
@@ -1647,7 +1701,7 @@ R2 Adj.
 AIC
 </td>
 <td style="text-align:center;">
-663.3
+493.4
 </td>
 </tr>
 <tr>
@@ -1655,7 +1709,7 @@ AIC
 BIC
 </td>
 <td style="text-align:center;">
-673.2
+509.3
 </td>
 </tr>
 <tr>
@@ -1663,7 +1717,7 @@ BIC
 Log.Lik.
 </td>
 <td style="text-align:center;">
-−328.656
+−241.703
 </td>
 </tr>
 <tr>
@@ -1671,7 +1725,7 @@ Log.Lik.
 RMSE
 </td>
 <td style="text-align:center;">
-1.27
+0.95
 </td>
 </tr>
 </tbody>

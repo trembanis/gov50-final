@@ -28,7 +28,6 @@ countries1 <- countries[!(countries$Fertility.rate..total..live.births.per.woman
   mutate(
     log_GDP = log(GDP.per.capita..current.US.. + 1)
   )
-countries1
 ```
 
 ```{r}

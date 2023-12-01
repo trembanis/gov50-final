@@ -17,24 +17,31 @@ output:
 
 ## Results
 
-```{r}
+```{r setup}
 library(tidyverse)
 library(ggplot2)
+
+# loading the dataset
+
 countries <- read.csv("country_profile_variables.csv")
+
 countries1 <- countries[!(countries$Fertility.rate..total..live.births.per.woman. < 0 | 
                             countries$GDP.per.capita..current.US.. < 0 |
                             countries$Employment..Agriculture....of.employed. < 0 |
-                            countries$Seats.held.by.women.in.national.parliaments.. < 0),] |>
+                            countries$Seats.held.by.women.in.national.parliaments.. < 0),] |>  # excluding placeholders (this dataset uses -99)
   mutate(
-    log_GDP = log(GDP.per.capita..current.US.. + 1)
-  )
+    log_GDP = log(GDP.per.capita..current.US.. + 1),  # doing a log-transformation for GDP per capita
+    fertility_rate = as.numeric(Fertility.rate..total..live.births.per.woman.),  # changing variables types to from character to numeric
+    perc_ag = as.numeric(Employment..Agriculture....of.employed.)) |>
+  rename(women_seats = Seats.held.by.women.in.national.parliaments..)  # renaming a variable
 ```
 
-```{r}
-ggplot(data = countries1, mapping = aes(x = log_GDP, 
-                                       y = as.numeric(Fertility.rate..total..live.births.per.woman.))) +
+```{r scatterplot visualization}
+## creating a scatterplot visualization
+
+ggplot(data = countries1, mapping = aes(x = log_GDP, y = fertility_rate)) +
   geom_point() +
-  geom_smooth() +
+  geom_smooth(method = "lm", se = FALSE) +  # line of best fit
   labs(
     x = "GDP per Capita (in log(USD))",
     y = "Fertility Rate (Total Live Births per Woman)",
@@ -42,17 +49,19 @@ ggplot(data = countries1, mapping = aes(x = log_GDP,
   )
 ```
 
-```{r}
-fit1 <- lm(as.numeric(Fertility.rate..total..live.births.per.woman.) ~ log_GDP + 
-             as.numeric(Employment..Agriculture....of.employed.) + 
-             Seats.held.by.women.in.national.parliaments.., data = countries1)
-summary(fit1)
+```{r linear regression}
+# creating the linear regression, controlling for certain potential confounders
+
+fit1 <- lm(fertility_rate ~ log_GDP + perc_ag + women_seats, data = countries1)
 
 library(modelsummary)
 
+# formatting the regression output
+
 modelsummary(list(fit1), coef_rename = c("Intercept", "GDP per Capita (in log(USD))",
                                          "Percentage of labor force employed in agriculture",
-                                         "Seats held by women in national parliaments"))
+                                         "Seats held by women in national parliaments"),
+             fmt = fmt_decimal(digits = 2, pdigits = 3))
 ```
 
 ## Conclusion
